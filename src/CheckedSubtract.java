@@ -1,13 +1,17 @@
 import Exceptions.EvaluatingException;
 import Exceptions.OverflowException;
+import Exceptions.TypeException;
+
 
 public class CheckedSubtract extends AbstractBinaryOperation {
-    public CheckedSubtract(TripleExpression firstExpression, TripleExpression secondExpression) throws EvaluatingException {
+    public CheckedSubtract(TripleExpression firstExpression, TripleExpression secondExpression) throws TypeException {
         super(firstExpression, secondExpression);
     }
 
-    protected int calculate(int x, int y) {
-        return x - y;
+    @Override
+    protected Integer countThrow(Integer integer, Integer integer1) throws EvaluatingException {
+        check(integer, integer1);
+        return integer - integer1;
     }
 
     protected void check(int x, int y) throws EvaluatingException {

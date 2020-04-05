@@ -1,6 +1,6 @@
 package Exceptions;
 
-public class MissingOperationException extends ParsingException {
+public class MissingOperationException extends SyntaxException {
     public MissingOperationException(int index) {
         super("Missing operation " + index);
     }

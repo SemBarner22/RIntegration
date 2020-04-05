@@ -3,7 +3,6 @@ import Exceptions.*;
 public class StringParser {
     private ExpressionParser expressionParser;
     private Token token;
-    private String name;
     private int value;
     private int index;
     private String expression;
@@ -13,6 +12,13 @@ public class StringParser {
     public StringParser(String expression, int index, Token token, ExpressionParser expressionParser) {
         this.expressionParser = expressionParser;
         this.token = token;
+        this.index = index;
+        balance = 0;
+        this.expression = expression;
+    }
+
+    public StringParser(String expression, int index, ExpressionParser expressionParser) {
+        this.expressionParser = expressionParser;
         this.index = index;
         balance = 0;
         this.expression = expression;
@@ -30,11 +36,7 @@ public class StringParser {
         return value;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    protected void next() throws ParsingException, EvaluatingException {
+    protected void next() throws SyntaxException {
         while (index < expression.length() && Character.isWhitespace(expression.charAt(index))) {
             index++;
         }
@@ -86,6 +88,7 @@ public class StringParser {
                     token = Token.CONST;
                 } else {
                     token = Token.UNARYMINUS;
+                    expressionParser.res += "-";
                 }
                 index--;
             }
@@ -108,7 +111,7 @@ public class StringParser {
                 && expression.substring(index, index + 7).equals("element")) {
             token = Token.VARIABLE;
             index += 6;
-            expressionParser.res += Parser1.afterLastMap;
+            expressionParser.res += Parser.afterLastMap;
         } else if (symbol == '(') {
             checkForOperation(index);
             balance++;
@@ -116,23 +119,23 @@ public class StringParser {
             expressionParser.res += "(";
         } else if (symbol == '>') {
             expressionParser.res += ">";
-            //checkForOperation(index);
+            checkForOperand(index);
             token = Token.GREATER;
         } else if (symbol == '<') {
             expressionParser.res += "<";
-//            checkForOperation(index);
+            checkForOperand(index);
             token = Token.LESS;
         } else if (symbol == '=') {
             expressionParser.res += "=";
-//            checkForOperation(index);
+            checkForOperand(index);
             token = Token.EQUAL;
         } else if (symbol == '|') {
             expressionParser.res += "|";
-//            checkForOperation(index);
+            checkForOperand(index);
             token = Token.OR;
         } else if (symbol == '&') {
             expressionParser.res += "&";
-//            checkForOperation(index);
+            checkForOperand(index);
             token = Token.AND;
         } else if (symbol == ')') {
             expressionParser.res += ")";
@@ -158,11 +161,4 @@ public class StringParser {
             throw new MissingOperationException(index);
         }
     }
-
-    private void checkNextPosition(int index) throws IncorrectExpressionException {
-        if (expression.charAt(index) != '-' && expression.charAt(index) != ' ' && expression.charAt(index) != '(') {
-            throw new IncorrectExpressionException("" + index);
-        }
-    }
-
 }

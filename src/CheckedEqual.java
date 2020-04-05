@@ -1,12 +1,12 @@
-import Exceptions.EvaluatingException;
+import Exceptions.TypeException;
 
-public class CheckedEqual extends AbstractBoolOperation1 {
-    public CheckedEqual(TripleExpression firstExpression, TripleExpression secondExpression) throws EvaluatingException {
+public class CheckedEqual extends AbstractBoolArithmeticOperandsOperation {
+    public CheckedEqual(TripleExpression firstExpression, TripleExpression secondExpression) throws TypeException {
         super(firstExpression, secondExpression);
     }
 
     @Override
-    protected int calculate(int x, int y) throws EvaluatingException {
-        return 0;
+    protected Integer count(Integer i, Integer i1) {
+        return i.equals(i1) ? 1 : 0;
     }
 }

@@ -1,5 +1,9 @@
 import Exceptions.EvaluatingException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Const extends TripleExpression {
     private Number value;
 
@@ -8,13 +12,9 @@ public class Const extends TripleExpression {
         this.type = 0;
     }
 
-    public int evaluate(int x, int y, int z) {
-        return value.intValue();
+    public List<Integer> evaluate(List<Integer> numbers) {
+        return new ArrayList<>(Collections.nCopies(numbers.size(), value.intValue()));
     }
 
-    @Override
-    int typeCheck() throws EvaluatingException {
-        return 0;
-    }
 
 }

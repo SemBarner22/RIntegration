@@ -1,34 +1,28 @@
 import Exceptions.EvaluatingException;
+import Exceptions.TypeException;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class AbstractBoolOperation extends TripleExpression {
-    private TripleExpression firstExpression, secondExpression;
+    protected TripleExpression firstExpression, secondExpression;
 
-    public AbstractBoolOperation(TripleExpression firstExpression, TripleExpression secondExpression) throws EvaluatingException {
-        this.firstExpression = firstExpression;
-        this.secondExpression = secondExpression;
-        this.type = 1;
-        typeCheck();
-    }
-
-    @Override
-    int typeCheck() throws EvaluatingException {
-        if (firstExpression.type == 1 && secondExpression.type == 1) {
-            return 1;
-        } else {
-            throw new EvaluatingException("type wrong");
-        }
-    }
-
-    protected abstract int calculate(int x, int y) throws EvaluatingException;
-
-    public int evaluate(int x, int y, int z) throws EvaluatingException {
-        int first = firstExpression.evaluate(x, y, z);
-        int second = secondExpression.evaluate(x, y, z);
-        check(first, second);
+    public List<Integer> evaluate(List<Integer> numbers) throws EvaluatingException {
+        List<Integer> first = firstExpression.evaluate(numbers);
+        List<Integer> second = secondExpression.evaluate(numbers);
         return calculate(first, second);
     }
 
-    protected void check(int x, int y) throws EvaluatingException {
-
+    protected List<Integer> calculate(List<Integer> numbersFirst, List<Integer> numbersSecond) {
+        List<Integer> result = new ArrayList<>();
+        Iterator<Integer> iter1 = numbersFirst.listIterator(0);
+        Iterator<Integer> iter2 = numbersSecond.listIterator(0);
+        while (iter1.hasNext()) {
+            result.add(count(iter1.next(), iter2.next()));
+        }
+        return result;
     }
+
+    protected abstract Integer count(Integer integer, Integer integer1);
 }

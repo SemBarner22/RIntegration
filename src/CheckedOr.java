@@ -1,12 +1,13 @@
-import Exceptions.EvaluatingException;
+import Exceptions.TypeException;
 
-public class CheckedOr extends AbstractBoolOperation {
-    public CheckedOr(TripleExpression firstExpression, TripleExpression secondExpression) throws EvaluatingException {
+
+public class CheckedOr extends AbstractBoolLogicalOperandsOperation {
+    public CheckedOr(TripleExpression firstExpression, TripleExpression secondExpression) throws TypeException {
         super(firstExpression, secondExpression);
     }
 
     @Override
-    protected int calculate(int x, int y) throws EvaluatingException {
-        return 0;
+    protected Integer count(Integer integer, Integer integer1) {
+        return integer | integer1;
     }
 }

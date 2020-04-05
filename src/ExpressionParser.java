@@ -1,7 +1,6 @@
-import Exceptions.EvaluatingException;
-import Exceptions.ExtraOpenBracketException;
-import Exceptions.ParsingException;
-import Exceptions.UnknownIdentifierException;
+import Exceptions.*;
+
+import java.util.List;
 
 public class ExpressionParser {
     StringParser stringParser;
@@ -12,27 +11,32 @@ public class ExpressionParser {
         return stringParser != null ? stringParser.endIndex : -1;
     }
 
-    public TripleExpression parse(String s, int index, Token token) throws ParsingException, EvaluatingException {
+    public TripleExpression parse(String s, int index, Token token)
+            throws SyntaxException, EvaluatingException, TypeException {
         stringParser = new StringParser(s, index, token, this);
         this.token = token;
         res = "";
         return orOperations();
     }
 
-    private TripleExpression orOperations() throws ParsingException, EvaluatingException {
+    public List<Integer> parse(String s, int index, List<Integer> n)
+            throws SyntaxException, EvaluatingException, TypeException {
+        stringParser = new StringParser(s, index,this);
+        res = "";
+        return orOperations().evaluate(n);
+    }
+
+    private TripleExpression orOperations() throws SyntaxException, EvaluatingException, TypeException {
         TripleExpression current = andOperations();
         while (true) {
             if (stringParser.getToken() == Token.OR) {
-//                if (token != Token.LOGICAL) {
-//                    throw new ParsingException("Not Logical");
-//                }
                 current = new CheckedOr(current, andOperations());
             }
             return current;
         }
     }
 
-    private TripleExpression andOperations() throws ParsingException, EvaluatingException {
+    private TripleExpression andOperations() throws SyntaxException, EvaluatingException, TypeException {
         TripleExpression current = equalityOperations();
         while (true) {
             if (stringParser.getToken() == Token.AND) {
@@ -43,7 +47,7 @@ public class ExpressionParser {
         }
     }
 
-    private TripleExpression equalityOperations() throws ParsingException, EvaluatingException {
+    private TripleExpression equalityOperations() throws SyntaxException, EvaluatingException, TypeException {
         TripleExpression current = addOrSubtractOperations();
         while (true) {
             if (stringParser.getToken() == Token.GREATER) {
@@ -58,7 +62,7 @@ public class ExpressionParser {
         }
     }
 
-    private TripleExpression addOrSubtractOperations() throws ParsingException, EvaluatingException {
+    private TripleExpression addOrSubtractOperations() throws SyntaxException, EvaluatingException, TypeException {
         TripleExpression current = multiplyOperations();
         while (true) {
             if (stringParser.getToken() == Token.ADD) {
@@ -71,7 +75,7 @@ public class ExpressionParser {
         }
     }
 
-    private TripleExpression multiplyOperations() throws ParsingException, EvaluatingException {
+    private TripleExpression multiplyOperations() throws SyntaxException, EvaluatingException, TypeException {
         TripleExpression current = otherOperations();
         while (true) {
             if (stringParser.getToken() == Token.MULTIPLY) {
@@ -82,14 +86,14 @@ public class ExpressionParser {
         }
     }
 
-    private TripleExpression otherOperations() throws ParsingException, EvaluatingException {
+    private TripleExpression otherOperations() throws SyntaxException, EvaluatingException, TypeException {
         stringParser.next();
         TripleExpression current;
         if (stringParser.getToken() == Token.CONST) {
             current = new Const(stringParser.getValue());
             stringParser.next();
         } else if (stringParser.getToken() == Token.VARIABLE) {
-            current = new Variable(stringParser.getName());
+            current = new Variable();
             stringParser.next();
         } else if (stringParser.getToken() == Token.OPENEDBRACKET) {
             current = orOperations();
