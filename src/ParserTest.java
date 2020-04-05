@@ -14,6 +14,10 @@ public class ParserTest {
                 Parser.parse("filter{((element+10)>10)&}%>%map{((element+10)*(element+10))}"));
         Assert.assertEquals("filter{(-element<-10)&((-element+10)>10)}%>%map{((element+10)*(element+10))}",
                 Parser.parse("filter{(-element<-10)}%>%filter{((-element+10)>10)}%>%map{((element+10)*(element+10))}"));
+        Assert.assertEquals("filter{(-element<-10)&((-element+10)>10)}%>%map{element}",
+                Parser.parse("filter{(-element<-10)}%>%filter{((-element+10)>10)}"));
+        Assert.assertEquals("filter{element=element}%>%map{((element+(10*element))*(element+10))}",
+                Parser.parse("map{((element+(10*element))*(element+10))}"));
         System.out.println("Tests have passed successfully");
     }
 }
