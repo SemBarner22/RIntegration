@@ -23,8 +23,9 @@ public class Parser {
         Iterator<Integer> iter1 = res.listIterator(0);
         Iterator<Integer> iter2 = numbers.listIterator(0);
         while (iter1.hasNext()) {
+            Integer next = iter2.next();
             if (iter1.next() == 1) {
-                result.add(iter2.next());
+                result.add(next);
             }
         }
         return map(string, result, expressionParser);
